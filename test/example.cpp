@@ -1,7 +1,6 @@
 #include<iostream>
 
-#include "lib/ope.hh"
-
+#include "ope.hh"
 using namespace std;
 
 int main(){

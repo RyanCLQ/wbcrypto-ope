@@ -24,7 +24,7 @@ class SM4BS {
     }
 
     void block_encrypt(const void *ptext, void *ctext, int size)  {
-        sm4_bs256_ecb_encrypt((uint8_t*) ctext,(uint8_t*) ptext,sizeof(ptext),rk);
+        sm4_bs256_ecb_encrypt((uint8_t*) ctext,(uint8_t*) ptext,size,rk);
     }
 
 

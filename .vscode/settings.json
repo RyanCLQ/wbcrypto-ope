@@ -52,6 +52,15 @@
         "streambuf": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp",
+        "random.h": "c",
+        "se-wbsm4.h": "c",
+        "sm4.h": "c",
+        "stdint.h": "c"
     }
 }

@@ -32,14 +32,14 @@ class ope_domain_range {
 class OPE {
  public:
     OPE(const std::string &keyarg, size_t plainbits, size_t cipherbits)
-    : key(keyarg), pbits(plainbits), cbits(cipherbits), aesk(aeskey(key)) {}
+    : key(keyarg), pbits(plainbits), cbits(cipherbits), block_key(seed(key)) {}
 
     NTL::ZZ encrypt(const NTL::ZZ &ptext);
     NTL::ZZ encrypt(int ptext);
     NTL::ZZ decrypt(const NTL::ZZ &ctext);
 
  private:
-    static std::string aeskey(const std::string &key) {
+    static std::string seed(const std::string &key) {
         auto v = sha256::hash(key);
         v.resize(16);
         return v;
@@ -48,7 +48,7 @@ class OPE {
     std::string key;
     size_t pbits, cbits;
 
-    SM4BS aesk;
+    SM4BS block_key;
     std::map<NTL::ZZ, NTL::ZZ> dgap_cache;
 
     template<class CB>

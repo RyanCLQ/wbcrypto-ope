@@ -57,7 +57,7 @@ template<class CB>
 ope_domain_range
 OPE::search(CB go_low)
 {
-    blockrng<SM4BS> r(aesk);
+    blockrng<SM4BS> r(block_key);
 
     return lazy_sample(to_ZZ(0), to_ZZ(1) << pbits,
                        to_ZZ(0), to_ZZ(1) << cbits,
@@ -79,7 +79,7 @@ OPE::encrypt(const ZZ &ptext)
     auto v = sha256::hash(StringFromZZ(ptext));
     v.resize(16);
 
-    blockrng<SM4BS> aesrand(aesk);
+    blockrng<SM4BS> aesrand(block_key);
     aesrand.set_ctr(v);
 
     ZZ nrange = dr.r_hi - dr.r_lo + 1;
