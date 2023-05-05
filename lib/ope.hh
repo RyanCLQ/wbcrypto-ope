@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-03-31 11:14:15
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-04-10 15:39:23
+ * @LastEditTime: 2023-05-04 18:06:19
  * @Description: 请填写简介
  */
 #pragma once
@@ -10,6 +10,7 @@
 #include "prng.hh"
 #include "hgd.hh"
 #include "aes.hh"
+#include "sm4_bs.hh"
 #include "sha.hh"
 #include "hmac.hh"
 #include "zz.hh"
@@ -47,7 +48,7 @@ class OPE {
     std::string key;
     size_t pbits, cbits;
 
-    AES aesk;
+    SM4BS aesk;
     std::map<NTL::ZZ, NTL::ZZ> dgap_cache;
 
     template<class CB>
@@ -56,5 +57,5 @@ class OPE {
     template<class CB>
     ope_domain_range lazy_sample(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
                                  const NTL::ZZ &r_lo, const NTL::ZZ &r_hi,
-                                 CB go_low, blockrng<AES> *prng);
+                                 CB go_low, blockrng<SM4BS> *prng);
 };

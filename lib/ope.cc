@@ -16,7 +16,7 @@ template<class CB>
 ope_domain_range
 OPE::lazy_sample(const ZZ &d_lo, const ZZ &d_hi,
                  const ZZ &r_lo, const ZZ &r_hi,
-                 CB go_low, blockrng<AES> *prng)
+                 CB go_low, blockrng<SM4BS> *prng)
 {
     ZZ ndomain = d_hi - d_lo + 1;
     ZZ nrange  = r_hi - r_lo + 1;
@@ -33,7 +33,7 @@ OPE::lazy_sample(const ZZ &d_lo, const ZZ &d_hi,
                                StringFromZZ(d_hi) + "/" +
                                StringFromZZ(r_lo) + "/" +
                                StringFromZZ(r_hi), key);
-    v.resize(AES::blocksize);
+    v.resize(SM4BS::blocksize);
     prng->set_ctr(v);
 
     ZZ rgap = nrange/2;
@@ -57,7 +57,7 @@ template<class CB>
 ope_domain_range
 OPE::search(CB go_low)
 {
-    blockrng<AES> r(aesk);
+    blockrng<SM4BS> r(aesk);
 
     return lazy_sample(to_ZZ(0), to_ZZ(1) << pbits,
                        to_ZZ(0), to_ZZ(1) << cbits,
@@ -79,7 +79,7 @@ OPE::encrypt(const ZZ &ptext)
     auto v = sha256::hash(StringFromZZ(ptext));
     v.resize(16);
 
-    blockrng<AES> aesrand(aesk);
+    blockrng<SM4BS> aesrand(aesk);
     aesrand.set_ctr(v);
 
     ZZ nrange = dr.r_hi - dr.r_lo + 1;
