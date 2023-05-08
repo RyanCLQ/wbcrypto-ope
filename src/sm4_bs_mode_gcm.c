@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-05-04 16:54:28
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-04 16:54:29
+ * @LastEditTime: 2023-05-05 15:52:40
  * @Description: 请填写简介
  */
 /*
@@ -17,7 +17,7 @@
 #include <stdlib.h>
 #include <immintrin.h>
 
-#include "sm4_bs_mode_gcm.h"
+#include "crypto/sm4_bs_mode_gcm.h"
 
 void *gcm_init() {
     return malloc(sizeof(gcm_context));

@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-03-31 11:14:15
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-04 18:06:19
+ * @LastEditTime: 2023-05-05 16:07:43
  * @Description: 请填写简介
  */
 #pragma once
@@ -11,6 +11,7 @@
 #include "hgd.hh"
 #include "aes.hh"
 #include "sm4_bs.hh"
+#include "wbsm4_se.hh"
 #include "sha.hh"
 #include "hmac.hh"
 #include "zz.hh"
@@ -32,11 +33,14 @@ class ope_domain_range {
 class OPE {
  public:
     OPE(const std::string &keyarg, size_t plainbits, size_t cipherbits)
-    : key(keyarg), pbits(plainbits), cbits(cipherbits), block_key(seed(key)) {}
+    : key(keyarg), pbits(plainbits), cbits(cipherbits), block_key1(seed(key)), block_key2(seed(key)){}
 
-    NTL::ZZ encrypt(const NTL::ZZ &ptext);
-    NTL::ZZ encrypt(int ptext);
-    NTL::ZZ decrypt(const NTL::ZZ &ctext);
+    NTL::ZZ encrypt_sm4(const NTL::ZZ &ptext);
+    NTL::ZZ encrypt_wbsm4(const NTL::ZZ &ptext);
+    NTL::ZZ encrypt_sm4(int ptext);
+    NTL::ZZ encrypt_wbsm4(int ptext);
+    NTL::ZZ decrypt_sm4(const NTL::ZZ &ctext);
+    NTL::ZZ decrypt_wbsm4(const NTL::ZZ &ctext);
 
  private:
     static std::string seed(const std::string &key) {
@@ -48,14 +52,23 @@ class OPE {
     std::string key;
     size_t pbits, cbits;
 
-    SM4BS block_key;
+    SM4BS block_key1;
+    WBSM4SE block_key2;
     std::map<NTL::ZZ, NTL::ZZ> dgap_cache;
 
     template<class CB>
-    ope_domain_range search(CB go_low);
+    ope_domain_range search_sm4(CB go_low);
 
     template<class CB>
-    ope_domain_range lazy_sample(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
+    ope_domain_range search_wbsm4(CB go_low);
+
+    template<class CB>
+    ope_domain_range lazy_sample_sm4(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
                                  const NTL::ZZ &r_lo, const NTL::ZZ &r_hi,
                                  CB go_low, blockrng<SM4BS> *prng);
+    
+    template<class CB>
+    ope_domain_range lazy_sample_wbsm4(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
+                                const NTL::ZZ &r_lo, const NTL::ZZ &r_hi,
+                                CB go_low, blockrng<WBSM4SE> *prng);
 };

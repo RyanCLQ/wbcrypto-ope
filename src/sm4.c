@@ -1,5 +1,5 @@
 
-#include "sm4.h"
+#include "crypto/sm4.h"
 #include "stdint.h"
 #include <string.h>
 #include <stdio.h>

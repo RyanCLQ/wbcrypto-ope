@@ -1,8 +1,8 @@
 /*
  * @Author: RyanCLQ
- * @Date: 2023-05-04 17:02:24
+ * @Date: 2023-05-05 15:43:20
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-05 15:46:05
+ * @LastEditTime: 2023-05-05 16:21:46
  * @Description: 请填写简介
  */
 #pragma once
@@ -11,26 +11,24 @@
 #include <string>
 #include <cstring>
 #include <vector>
-#include "crypto/sm4_bs.h"
+#include "crypto/wbsm4_se.h"
 #include "errstream.hh"
 
-class SM4BS {
+class WBSM4SE {
  public:
-    SM4BS(const std::string &key) {
+    WBSM4SE(const std::string &key) {
         throw_c(key.size() == 16);
         std::vector<uint8_t> key_vector(key.begin(), key.end());
         uint8_t* key_data = key_vector.data();
-        sm4_bs256_key_schedule(key_data,rk);
+        wbsm4_gen(key_data);
     }
 
     void block_encrypt(const void *ptext, void *ctext, int size)  {
-        sm4_bs256_ecb_encrypt((uint8_t*) ctext,(uint8_t*) ptext,size,rk);
+        wbsm4_encrypt((uint8_t*) ptext,(uint8_t*) ctext);
     }
 
 
     static const size_t blocksize = 16;
 
- private:
-    __m256i rk[32][32];
 };
 

@@ -1,7 +1,7 @@
 /*
  * @Date: 2022-09-25 10:29:17
- * @LastEditors: error: git config user.name && git config user.email & please set dead value or install git
- * @LastEditTime: 2022-09-25 19:17:55
+ * @LastEditors: RyanCLQ
+ * @LastEditTime: 2023-05-05 16:27:35
  * @FilePath: /whibox-sm4/SE-WBSM4/include/WBSM4.h
  * @Description: 
  * 
@@ -10,6 +10,10 @@
 //自等价wbsm4
 #include "wbmatrix/WBMatrix.h"
 #include "sm4.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef unsigned char  u8;
 typedef unsigned int   u32;
@@ -69,3 +73,6 @@ extern Aff32 SE[4];
 extern Aff32 FE[4];
 void wbsm4_gen(uint8_t *key);
 void wbsm4_encrypt(unsigned char IN[], unsigned char OUT[]);
+#ifdef __cplusplus
+}
+#endif

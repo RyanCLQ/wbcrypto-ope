@@ -3,14 +3,14 @@
  * @Version      : 
  * @Autor        : one30
  * @Date         : 2020-11-11 21:51:47
- * @LastEditTime: 2023-05-04 17:26:19
+ * @LastEditTime: 2023-05-05 15:47:45
  * @FilePath     : /src/sm4_bs256.c
  */
 #include <string.h>
 #include <stdio.h>
 #include <time.h>
 
-#include "sm4_bs.h"
+#include "crypto/sm4_bs.h"
 
 void dump_hex(uint8_t * h, int len)
 {

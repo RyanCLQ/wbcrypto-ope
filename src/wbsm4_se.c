@@ -1,4 +1,4 @@
-#include "SE-wbsm4.h"
+#include "crypto/wbsm4_se.h"
 Aff32 M[32][3]={1};
 Aff32 C[32]={1};
 Aff32 D[32]={1};
