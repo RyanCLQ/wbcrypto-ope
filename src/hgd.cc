@@ -44,7 +44,7 @@ HGD(const ZZ &KK, const ZZ &NN1, const ZZ &NN2, PRNG *prng)
      * or re-implement the relevant parts of NTL::RR with a scoped
      * precision parameter..
      */
-    long precision = NumBits(NN1 + NN2 + KK) + 10;
+    long precision = NumBits(NN1 + NN2 + KK) + 10;//l大小为值域大小的1.5倍再加10,带子长度
     RR::SetPrecision(precision);
 
     RR JX;      // the result

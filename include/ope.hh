@@ -34,7 +34,7 @@ class ope_domain_range {
 class OPE {
  public:
     OPE(const std::string &keyarg, size_t plainbits, size_t cipherbits)
-    : key(keyarg), pbits(plainbits), cbits(cipherbits), block_key1(seed(key)), block_key2(seed(key)){}
+    : key(keyarg), pbits(plainbits), cbits(cipherbits), block_key1(seed(key)), block_key2(seed(key)){}//哈希处理密钥，使得可以输入不同长度的密钥
 
     NTL::ZZ encrypt_sm4(const NTL::ZZ &ptext);
     NTL::ZZ encrypt_wbsm4(const NTL::ZZ &ptext);

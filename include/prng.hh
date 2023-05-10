@@ -96,7 +96,6 @@ class blockrng : public PRNG {
                 if (ctr[j] != 0)
                     break;
             }
-
             uint8_t ct[bc.blocksize];
             bc.block_encrypt(ctr, ct, sizeof(ctr));
 

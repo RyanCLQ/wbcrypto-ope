@@ -7,25 +7,44 @@ using namespace NTL;
  * A gap is represented by the next integer value _above_ the gap.
  */
 static ZZ
-domain_gap(const ZZ &ndomain, const ZZ &nrange, const ZZ &rgap, PRNG *prng)
+domain_gap(const ZZ &ndomain, const ZZ &nrange, const ZZ &rgap, PRNG *prng)//输入定义域大小，值域大小，二分查找值域的中间值，随机数生成函数
 {
     return HGD(rgap, ndomain, nrange-ndomain, prng);
 }
 //把RR的小数部分转换成string
-std::string decimalToString(const NTL::RR& num)
+string decimalToString(const NTL::RR& num)
 {
-    std::ostringstream oss;
+    ostringstream oss;
     oss << num;
-    std::string strNum = oss.str();
+    string strNum = oss.str();
 
     // 去除整数部分和小数点，只保留小数部分的字符串
-    std::size_t dotPos = strNum.find('.');
-    if (dotPos != std::string::npos)
+    size_t dotPos = strNum.find('.');
+    if (dotPos != string::npos)
     {
         strNum = strNum.substr(dotPos + 1);
     }
 
     return strNum;
+}
+
+//把两个ZZ的部分转换成一个RR
+static RR 
+IntDecToRR(const ZZ& cint, const ZZ& cdec)
+{
+    string str_cint = StringFromZZ(cint);
+    if(cdec == 0){ 
+        return to_RR(cint);
+    }
+    string str_cdec = StringFromZZ(cdec);
+
+    cout<<cint<<"\n"<<str_cint<<endl;
+    cout<<cdec<<"\n"<<str_cdec<<endl;
+    // 还原小数点
+    str_cint = str_cint + '.' +str_cdec;
+    cout<<str_cint<<"  "<<str_cint.c_str();
+     cout<<"test"<<endl;
+    return to_RR(str_cint.c_str());//todo 可能有错
 }
 
 template<class CB>
@@ -190,11 +209,71 @@ OPE::encrypt_wbsm4(const ZZ &ptext)
     return dr.r_lo + rand.rand_zz_mod(nrange);
 }
 
+RR
+OPE::encrypt_sm4(const RR &ptext)
+{
+    ZZ pint = NTL::TruncToZZ(ptext);//整数部分
+    string decimal = decimalToString(ptext); 
+    ZZ pdec = ZZFromString(decimal);//小数部分
+
+    ope_domain_range dint =
+        search_sm4([&pint](const ZZ &d, const ZZ &) { return pint < d; });
+    ope_domain_range ddec =
+        search_sm4([&pdec](const ZZ &d, const ZZ &) { return pdec < d; });
+
+    ostringstream oss;
+    oss << ptext;
+    string str_ptext = oss.str();
+    
+    auto v = sha256::hash(str_ptext); 
+    v.resize(16);
+    
+    blockrng<SM4BS> rand(block_key1);
+    rand.set_ctr(v);
+
+    ZZ intrange = dint.r_hi - dint.r_lo + 1;
+    ZZ decrange = ddec.r_hi - ddec.r_lo + 1;
+    ZZ cint = dint.r_lo + rand.rand_zz_mod(intrange);
+    ZZ cdec = ddec.r_lo + rand.rand_zz_mod(decrange);
+   
+    return IntDecToRR(cint,cdec);
+}
+
+RR
+OPE::encrypt_wbsm4(const RR &ptext)
+{
+    ZZ pint = NTL::TruncToZZ(ptext);//整数部分
+    string decimal = decimalToString(ptext); 
+    ZZ pdec = ZZFromString(decimal);//小数部分
+
+    ope_domain_range dint =
+        search_wbsm4([&pint](const ZZ &d, const ZZ &) { return pint < d; });
+    ope_domain_range ddec =
+        search_wbsm4([&pdec](const ZZ &d, const ZZ &) { return pdec < d; });
+
+    ostringstream oss;
+    oss << ptext;
+    string str_ptext = oss.str();
+    
+    auto v = sha256::hash(str_ptext); 
+    v.resize(16);
+
+    blockrng<WBSM4SE> rand(block_key2);
+    rand.set_ctr(v);
+
+    ZZ intrange = dint.r_hi - dint.r_lo + 1;
+    ZZ decrange = ddec.r_hi - ddec.r_lo + 1;
+    ZZ cint = dint.r_lo + rand.rand_zz_mod(intrange);
+    ZZ cdec = ddec.r_lo + rand.rand_zz_mod(decrange);
+
+    return IntDecToRR(cint,cdec);
+}
+
 ZZ
 OPE::decrypt_sm4(const ZZ &ctext)
 {
     ope_domain_range dr =
-        search_sm4([&ctext](const ZZ &, const ZZ &r) { return ctext < r; });//传入比较大小的函数，输入明文和d去比较，占位符是留给加密的d的，没有用到，因为lazy_sample是复用的
+        search_sm4([&ctext](const ZZ &, const ZZ &r) { return ctext < r; });
     return dr.d;
 }
 
@@ -209,24 +288,32 @@ OPE::decrypt_wbsm4(const ZZ &ctext)
 RR
 OPE::decrypt_sm4(const RR &ctext)
 {
-    ZZ cint = NTL::TruncToZZ(ctext);
+    ZZ cint = NTL::TruncToZZ(ctext);//整数部分
     string decimal = decimalToString(ctext); 
-    ZZ cdec = ZZFromString(decimal);
+    ZZ cdec = ZZFromString(decimal);//小数部分
     ope_domain_range dint =
         search_sm4([&cint](const ZZ &, const ZZ &r) { return cint < r; });
     
-    ope_domain_range dfra =
-        search_sm4([&cdec](const ZZ &, const ZZ &r) { return cdec < r; });  
-        
+    ope_domain_range ddec =
+        search_sm4([&cdec](const ZZ &, const ZZ &r) { return cdec < r; });    
          
-    return dr.d;
+    cout<<"输出的解密RR"<<IntDecToRR(dint.d,ddec.d)<<endl;     
+    return IntDecToRR(dint.d,ddec.d);
 }
 
 RR
 OPE::decrypt_wbsm4(const RR &ctext)
 {
-    ope_domain_range dr =
-        search_wbsm4([&ctext](const ZZ &, const ZZ &r) { return ctext < r; });
-    return dr.d;
+    ZZ cint = NTL::TruncToZZ(ctext);//整数部分
+    string decimal = decimalToString(ctext); 
+    ZZ cdec = ZZFromString(decimal);//小数部分
+    ope_domain_range dint =
+        search_wbsm4([&cint](const ZZ &, const ZZ &r) { return cint < r; });
+    
+    ope_domain_range ddec =
+        search_wbsm4([&cdec](const ZZ &, const ZZ &r) { return cdec < r; });    
+         
+    cout<<"输出的解密RR"<<IntDecToRR(dint.d,ddec.d)<<endl;     
+    return IntDecToRR(dint.d,ddec.d);
 }
 
