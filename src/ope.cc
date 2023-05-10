@@ -23,6 +23,8 @@ string decimalToString(const NTL::RR& num)
     if (dotPos != string::npos)
     {
         strNum = strNum.substr(dotPos + 1);
+    }else{
+        return "0";
     }
 
     return strNum;
@@ -32,19 +34,18 @@ string decimalToString(const NTL::RR& num)
 static RR 
 IntDecToRR(const ZZ& cint, const ZZ& cdec)
 {
-    string str_cint = StringFromZZ(cint);
+    NTL::RR::SetPrecision(32);
+    string str_cint = DecStringFromZZ(cint);
     if(cdec == 0){ 
         return to_RR(cint);
     }
-    string str_cdec = StringFromZZ(cdec);
+    string str_cdec = DecStringFromZZ(cdec);
 
-    cout<<cint<<"\n"<<str_cint<<endl;
-    cout<<cdec<<"\n"<<str_cdec<<endl;
     // 还原小数点
     str_cint = str_cint + '.' +str_cdec;
-    cout<<str_cint<<"  "<<str_cint.c_str();
-     cout<<"test"<<endl;
-    return to_RR(str_cint.c_str());//todo 可能有错
+    cout<<to_RR(str_cint.c_str())<<endl;
+    cout<<str_cint<<"\n"<<str_cint.c_str()<<endl;
+    return to_RR(str_cint.c_str());
 }
 
 template<class CB>
@@ -214,8 +215,7 @@ OPE::encrypt_sm4(const RR &ptext)
 {
     ZZ pint = NTL::TruncToZZ(ptext);//整数部分
     string decimal = decimalToString(ptext); 
-    ZZ pdec = ZZFromString(decimal);//小数部分
-
+    ZZ pdec = ZZFromDecString(decimal);//小数部分
     ope_domain_range dint =
         search_sm4([&pint](const ZZ &d, const ZZ &) { return pint < d; });
     ope_domain_range ddec =
@@ -244,7 +244,7 @@ OPE::encrypt_wbsm4(const RR &ptext)
 {
     ZZ pint = NTL::TruncToZZ(ptext);//整数部分
     string decimal = decimalToString(ptext); 
-    ZZ pdec = ZZFromString(decimal);//小数部分
+    ZZ pdec = ZZFromDecString(decimal);//小数部分
 
     ope_domain_range dint =
         search_wbsm4([&pint](const ZZ &d, const ZZ &) { return pint < d; });
@@ -290,7 +290,7 @@ OPE::decrypt_sm4(const RR &ctext)
 {
     ZZ cint = NTL::TruncToZZ(ctext);//整数部分
     string decimal = decimalToString(ctext); 
-    ZZ cdec = ZZFromString(decimal);//小数部分
+    ZZ cdec = ZZFromDecString(decimal);//小数部分
     ope_domain_range dint =
         search_sm4([&cint](const ZZ &, const ZZ &r) { return cint < r; });
     
@@ -306,7 +306,7 @@ OPE::decrypt_wbsm4(const RR &ctext)
 {
     ZZ cint = NTL::TruncToZZ(ctext);//整数部分
     string decimal = decimalToString(ctext); 
-    ZZ cdec = ZZFromString(decimal);//小数部分
+    ZZ cdec = ZZFromDecString(decimal);//小数部分
     ope_domain_range dint =
         search_wbsm4([&cint](const ZZ &, const ZZ &r) { return cint < r; });
     

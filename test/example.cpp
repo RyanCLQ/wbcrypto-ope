@@ -13,10 +13,10 @@ using namespace std;
 int main(){
 
 	// plaintext range's length in bits (plaintexts are in [0, 2**P-1]
-	unsigned int P = 32;//基于超几何分布，不能有负数，可以取模后加密？？
+	unsigned int P = 16;//基于超几何分布，不能有负数，可以取模后加密？？
 	// ciphertext range's length in bits (ciphertexts are in [0, 2**C-1]
 	unsigned int C = 64;
-
+	
 
 	OPE o("S0M3 $TR@NG Key", P, C);
 
@@ -63,12 +63,13 @@ int main(){
 
 
 	NTL::RR dec_1 = o.decrypt_sm4(c1);
+	cout<<"test"<<endl;
 	NTL::RR dec_2 = o.decrypt_sm4(c2);
 	NTL::RR dec_3 = o.decrypt_sm4(c3);
 	NTL::RR dec_4 = o.decrypt_wbsm4(c4);
 	NTL::RR dec_5 = o.decrypt_wbsm4(c5);
 	NTL::RR dec_6 = o.decrypt_wbsm4(c6);
-
+	cout<<"test"<<endl;
 	
 	if (m1 == dec_1 && m2 == dec_2 && m3 == dec_3){
 		cout << "Decryption working fine." << endl;
