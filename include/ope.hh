@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-03-31 11:14:15
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-05 16:07:43
+ * @LastEditTime: 2023-05-09 16:55:12
  * @Description: 请填写简介
  */
 #pragma once
@@ -20,6 +20,7 @@
 #include <map>
 
 #include <NTL/ZZ.h>
+#include <NTL/RR.h>
 
 class ope_domain_range {
  public:
@@ -39,8 +40,15 @@ class OPE {
     NTL::ZZ encrypt_wbsm4(const NTL::ZZ &ptext);
     NTL::ZZ encrypt_sm4(int ptext);
     NTL::ZZ encrypt_wbsm4(int ptext);
+    NTL::RR encrypt_sm4(const NTL::RR &ptext);
+    NTL::RR encrypt_wbsm4(const NTL::RR &ptext);
+    NTL::RR encrypt_sm4(float ptext);
+    NTL::RR encrypt_wbsm4(float ptext);
+
     NTL::ZZ decrypt_sm4(const NTL::ZZ &ctext);
     NTL::ZZ decrypt_wbsm4(const NTL::ZZ &ctext);
+    NTL::RR decrypt_sm4(const NTL::RR &ctext);
+    NTL::RR decrypt_wbsm4(const NTL::RR &ctext);
 
  private:
     static std::string seed(const std::string &key) {
