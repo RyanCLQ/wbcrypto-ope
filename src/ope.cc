@@ -52,7 +52,7 @@ template<class CB>
 ope_domain_range
 OPE::lazy_sample_sm4(const ZZ &d_lo, const ZZ &d_hi,
                  const ZZ &r_lo, const ZZ &r_hi,
-                 CB go_low, blockrng<SM4BS> *prng)
+                 CB go_low, blockrng<LUTSM4> *prng)
 {
     ZZ ndomain = d_hi - d_lo + 1;
     ZZ nrange  = r_hi - r_lo + 1;
@@ -69,7 +69,7 @@ OPE::lazy_sample_sm4(const ZZ &d_lo, const ZZ &d_hi,
                                StringFromZZ(d_hi) + "/" +
                                StringFromZZ(r_lo) + "/" +
                                StringFromZZ(r_hi), key);
-    v.resize(SM4BS::blocksize);
+    v.resize(LUTSM4::blocksize);
     prng->set_ctr(v);
 
     ZZ rgap = nrange/2;
@@ -135,7 +135,7 @@ template<class CB>
 ope_domain_range
 OPE::search_sm4(CB go_low)
 {
-    blockrng<SM4BS> r(block_key1);
+    blockrng<LUTSM4> r(block_key1);
 
     return lazy_sample_sm4(to_ZZ(0), to_ZZ(1) << pbits,
                        to_ZZ(0), to_ZZ(1) << cbits,
@@ -187,7 +187,7 @@ OPE::encrypt_sm4(const ZZ &ptext)
     auto v = sha256::hash(StringFromZZ(ptext));
     v.resize(16);
 
-    blockrng<SM4BS> rand(block_key1);
+    blockrng<LUTSM4> rand(block_key1);
     rand.set_ctr(v);
 
     ZZ nrange = dr.r_hi - dr.r_lo + 1;
@@ -228,7 +228,7 @@ OPE::encrypt_sm4(const RR &ptext)
     auto v = sha256::hash(str_ptext); 
     v.resize(16);
     
-    blockrng<SM4BS> rand(block_key1);
+    blockrng<LUTSM4> rand(block_key1);
     rand.set_ctr(v);
 
     ZZ intrange = dint.r_hi - dint.r_lo + 1;

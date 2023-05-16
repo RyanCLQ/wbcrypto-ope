@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-03-31 11:14:15
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-09 16:55:12
+ * @LastEditTime: 2023-05-16 20:03:21
  * @Description: 请填写简介
  */
 #pragma once
@@ -10,7 +10,7 @@
 #include "prng.hh"
 #include "hgd.hh"
 #include "aes.hh"
-#include "sm4_bs.hh"
+#include "lut_sm4.hh"
 #include "wbsm4_se.hh"
 #include "sha.hh"
 #include "hmac.hh"
@@ -38,15 +38,19 @@ class OPE {
 
     NTL::ZZ encrypt_sm4(const NTL::ZZ &ptext);
     NTL::ZZ encrypt_wbsm4(const NTL::ZZ &ptext);
+    
     NTL::ZZ encrypt_sm4(int ptext);
     NTL::ZZ encrypt_wbsm4(int ptext);
+
     NTL::RR encrypt_sm4(const NTL::RR &ptext);
     NTL::RR encrypt_wbsm4(const NTL::RR &ptext);
+
     NTL::RR encrypt_sm4(float ptext);
     NTL::RR encrypt_wbsm4(float ptext);
 
     NTL::ZZ decrypt_sm4(const NTL::ZZ &ctext);
     NTL::ZZ decrypt_wbsm4(const NTL::ZZ &ctext);
+
     NTL::RR decrypt_sm4(const NTL::RR &ctext);
     NTL::RR decrypt_wbsm4(const NTL::RR &ctext);
 
@@ -60,7 +64,7 @@ class OPE {
     std::string key;
     size_t pbits, cbits;
 
-    SM4BS block_key1;
+    LUTSM4 block_key1;
     WBSM4SE block_key2;
     std::map<NTL::ZZ, NTL::ZZ> dgap_cache;
 
@@ -73,7 +77,7 @@ class OPE {
     template<class CB>
     ope_domain_range lazy_sample_sm4(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
                                  const NTL::ZZ &r_lo, const NTL::ZZ &r_hi,
-                                 CB go_low, blockrng<SM4BS> *prng);
+                                 CB go_low, blockrng<LUTSM4> *prng);
     
     template<class CB>
     ope_domain_range lazy_sample_wbsm4(const NTL::ZZ &d_lo, const NTL::ZZ &d_hi,
