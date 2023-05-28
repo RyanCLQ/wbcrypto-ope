@@ -1,8 +1,8 @@
 /*
  * @Author: RyanCLQ
- * @Date: 2023-05-16 19:54:54
+ * @Date: 2023-05-04 17:02:24
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-16 20:00:42
+ * @LastEditTime: 2023-05-05 15:46:05
  * @Description: 请填写简介
  */
 #pragma once
@@ -20,11 +20,11 @@ class LUTSM4 {
         throw_c(key.size() == 16);
         std::vector<uint8_t> key_vector(key.begin(), key.end());
         uint8_t* key_data = key_vector.data();
-        SM4_KeyInit(key_data,&sm4_key);
+        SM4_KeyInit(key_data, &sm4_key);
     }
 
-    void block_encrypt(const void *ptext, void *ctext)  {
-        SM4_Encrypt((uint8_t*) ptext,(uint8_t*) ctext, sm4_key);
+    void block_encrypt(const void *ptext, void *ctext, int size)  {
+        SM4_Encrypt((uint8_t*) ptext,(uint8_t*) ctext,sm4_key);
     }
 
 

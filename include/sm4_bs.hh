@@ -20,17 +20,17 @@ class SM4BS {
         throw_c(key.size() == 16);
         std::vector<uint8_t> key_vector(key.begin(), key.end());
         uint8_t* key_data = key_vector.data();
-        sm4_bs256_key_schedule(key_data,rk);
+        sm4_bs512_key_schedule(key_data,rk);
     }
 
     void block_encrypt(const void *ptext, void *ctext, int size)  {
-        sm4_bs256_ecb_encrypt((uint8_t*) ctext,(uint8_t*) ptext,size,rk);
+        sm4_bs512_ecb_encrypt((uint8_t*) ctext,(uint8_t*) ptext,size,rk);
     }
 
 
     static const size_t blocksize = 16;
 
  private:
-    __m256i rk[32][32];
+    __m512i rk[32][32];
 };
 

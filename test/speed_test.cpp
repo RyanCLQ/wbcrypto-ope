@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-05-05 15:34:15
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-16 20:04:47
+ * @LastEditTime: 2023-05-14 22:09:04
  * @Description: 请填写简介
  */
 #include<iostream>
@@ -20,7 +20,7 @@ int main(){
 	unsigned int C = 64;
 	
 
-	OPE o("S0M3 $TR@NG Key", P, C);
+	OPESM4 o("S0M3 $TR@NG Key", P, C);
 
 	//it works with ZZ instead of usual integers
 	NTL::ZZ m1 = NTL::to_ZZ(2000);
@@ -37,18 +37,18 @@ int main(){
     program_end = clock();
     ts = program_end - program_start;
     ts = ts / CLOCKS_PER_SEC;
-    printf("[OPE LUTSM4] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    printf("[OPE SEWBSM4] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
            1 / (ts / TESTTIME));
-    
-    program_start = clock();
-    for (i = 0; i < TESTTIME; i++) {
-        c2 = o.encrypt_wbsm4(m1);
-    }
-    program_end = clock();
-    ts = program_end - program_start;
-    ts = ts / CLOCKS_PER_SEC;
-    printf("[OPE SE-WBSM4] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
-           1 / (ts / TESTTIME));
+    printf("times/s:%f",TESTTIME/(ts+0.06));
+    // program_start = clock();
+    // for (i = 0; i < TESTTIME; i++) {
+    //     c2 = o.encrypt_wbsm4(m1);
+    // }
+    // program_end = clock();
+    // ts = program_end - program_start;
+    // ts = ts / CLOCKS_PER_SEC;
+    // printf("[OPE SE-WBSM4] Time cost: %lf s, it means that the encryption speed is: %f MByte/s\n", ts / TESTTIME,
+    //        1 / (ts / TESTTIME));
 
 	return 0;
 }

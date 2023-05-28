@@ -50,7 +50,7 @@ IntDecToRR(const ZZ& cint, const ZZ& cdec)
 
 template<class CB>
 ope_domain_range
-OPE::lazy_sample_sm4(const ZZ &d_lo, const ZZ &d_hi,
+OPESM4::lazy_sample_sm4(const ZZ &d_lo, const ZZ &d_hi,
                  const ZZ &r_lo, const ZZ &r_hi,
                  CB go_low, blockrng<LUTSM4> *prng)
 {
@@ -92,7 +92,7 @@ OPE::lazy_sample_sm4(const ZZ &d_lo, const ZZ &d_hi,
 
 template<class CB>
 ope_domain_range
-OPE::lazy_sample_wbsm4(const ZZ &d_lo, const ZZ &d_hi,
+OPEWBSM4::lazy_sample_wbsm4(const ZZ &d_lo, const ZZ &d_hi,
                  const ZZ &r_lo, const ZZ &r_hi,
                  CB go_low, blockrng<WBSM4SE> *prng)
 {
@@ -133,9 +133,9 @@ OPE::lazy_sample_wbsm4(const ZZ &d_lo, const ZZ &d_hi,
 
 template<class CB>
 ope_domain_range
-OPE::search_sm4(CB go_low)
+OPESM4::search_sm4(CB go_low)
 {
-    blockrng<LUTSM4> r(block_key1);
+    blockrng<LUTSM4> r(block_key);
 
     return lazy_sample_sm4(to_ZZ(0), to_ZZ(1) << pbits,
                        to_ZZ(0), to_ZZ(1) << cbits,
@@ -144,9 +144,9 @@ OPE::search_sm4(CB go_low)
 
 template<class CB>
 ope_domain_range
-OPE::search_wbsm4(CB go_low)
+OPEWBSM4::search_wbsm4(CB go_low)
 {
-    blockrng<WBSM4SE> r(block_key2);
+    blockrng<WBSM4SE> r(block_key);
 
     return lazy_sample_wbsm4(to_ZZ(0), to_ZZ(1) << pbits,
                        to_ZZ(0), to_ZZ(1) << cbits,
@@ -155,31 +155,31 @@ OPE::search_wbsm4(CB go_low)
 
 
 ZZ
-OPE::encrypt_sm4(int ptext){
+OPESM4::encrypt_sm4(int ptext){
 	ZZ plaintext_ZZ = to_ZZ(ptext);
 	return encrypt_sm4(plaintext_ZZ);
 }
 
 ZZ
-OPE::encrypt_wbsm4(int ptext){
+OPEWBSM4::encrypt_wbsm4(int ptext){
 	ZZ plaintext_ZZ = to_ZZ(ptext);
 	return encrypt_wbsm4(plaintext_ZZ);
 }
 
 RR
-OPE::encrypt_sm4(float ptext){
+OPESM4::encrypt_sm4(float ptext){
 	RR plaintext_RR = to_RR(ptext);
 	return encrypt_sm4(plaintext_RR);
 }
 
 RR
-OPE::encrypt_wbsm4(float ptext){
+OPEWBSM4::encrypt_wbsm4(float ptext){
 	RR plaintext_RR = to_RR(ptext);
 	return encrypt_wbsm4(plaintext_RR);
 }
 
 ZZ
-OPE::encrypt_sm4(const ZZ &ptext)
+OPESM4::encrypt_sm4(const ZZ &ptext)
 {
     ope_domain_range dr =
         search_sm4([&ptext](const ZZ &d, const ZZ &) { return ptext < d; });
@@ -187,7 +187,7 @@ OPE::encrypt_sm4(const ZZ &ptext)
     auto v = sha256::hash(StringFromZZ(ptext));
     v.resize(16);
 
-    blockrng<LUTSM4> rand(block_key1);
+    blockrng<LUTSM4> rand(block_key);
     rand.set_ctr(v);
 
     ZZ nrange = dr.r_hi - dr.r_lo + 1;
@@ -195,7 +195,7 @@ OPE::encrypt_sm4(const ZZ &ptext)
 }
 
 ZZ
-OPE::encrypt_wbsm4(const ZZ &ptext)
+OPEWBSM4::encrypt_wbsm4(const ZZ &ptext)
 {
     ope_domain_range dr =
         search_wbsm4([&ptext](const ZZ &d, const ZZ &) { return ptext < d; });//传入比较大小的函数，输入明文和d去比较，占位符是留给解密的r的，没有用到
@@ -203,7 +203,7 @@ OPE::encrypt_wbsm4(const ZZ &ptext)
     auto v = sha256::hash(StringFromZZ(ptext));
     v.resize(16);
 
-    blockrng<WBSM4SE> rand(block_key2);
+    blockrng<WBSM4SE> rand(block_key);
     rand.set_ctr(v);
 
     ZZ nrange = dr.r_hi - dr.r_lo + 1;
@@ -211,7 +211,7 @@ OPE::encrypt_wbsm4(const ZZ &ptext)
 }
 
 RR
-OPE::encrypt_sm4(const RR &ptext)
+OPESM4::encrypt_sm4(const RR &ptext)
 {
     ZZ pint = NTL::TruncToZZ(ptext);//整数部分
     string decimal = decimalToString(ptext); 
@@ -228,7 +228,7 @@ OPE::encrypt_sm4(const RR &ptext)
     auto v = sha256::hash(str_ptext); 
     v.resize(16);
     
-    blockrng<LUTSM4> rand(block_key1);
+    blockrng<LUTSM4> rand(block_key);
     rand.set_ctr(v);
 
     ZZ intrange = dint.r_hi - dint.r_lo + 1;
@@ -240,7 +240,7 @@ OPE::encrypt_sm4(const RR &ptext)
 }
 
 RR
-OPE::encrypt_wbsm4(const RR &ptext)
+OPEWBSM4::encrypt_wbsm4(const RR &ptext)
 {
     ZZ pint = NTL::TruncToZZ(ptext);//整数部分
     string decimal = decimalToString(ptext); 
@@ -258,7 +258,7 @@ OPE::encrypt_wbsm4(const RR &ptext)
     auto v = sha256::hash(str_ptext); 
     v.resize(16);
 
-    blockrng<WBSM4SE> rand(block_key2);
+    blockrng<WBSM4SE> rand(block_key);
     rand.set_ctr(v);
 
     ZZ intrange = dint.r_hi - dint.r_lo + 1;
@@ -270,7 +270,7 @@ OPE::encrypt_wbsm4(const RR &ptext)
 }
 
 ZZ
-OPE::decrypt_sm4(const ZZ &ctext)
+OPESM4::decrypt_sm4(const ZZ &ctext)
 {
     ope_domain_range dr =
         search_sm4([&ctext](const ZZ &, const ZZ &r) { return ctext < r; });
@@ -278,7 +278,7 @@ OPE::decrypt_sm4(const ZZ &ctext)
 }
 
 ZZ
-OPE::decrypt_wbsm4(const ZZ &ctext)
+OPEWBSM4::decrypt_wbsm4(const ZZ &ctext)
 {
     ope_domain_range dr =
         search_wbsm4([&ctext](const ZZ &, const ZZ &r) { return ctext < r; });
@@ -286,7 +286,7 @@ OPE::decrypt_wbsm4(const ZZ &ctext)
 }
 
 RR
-OPE::decrypt_sm4(const RR &ctext)
+OPESM4::decrypt_sm4(const RR &ctext)
 {
     ZZ cint = NTL::TruncToZZ(ctext);//整数部分
     string decimal = decimalToString(ctext); 
@@ -302,7 +302,7 @@ OPE::decrypt_sm4(const RR &ctext)
 }
 
 RR
-OPE::decrypt_wbsm4(const RR &ctext)
+OPEWBSM4::decrypt_wbsm4(const RR &ctext)
 {
     ZZ cint = NTL::TruncToZZ(ctext);//整数部分
     string decimal = decimalToString(ctext); 

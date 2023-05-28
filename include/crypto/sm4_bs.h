@@ -1,8 +1,8 @@
 /*
  * @Author: RyanCLQ
  * @Date: 2023-05-04 16:53:45
- * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-04 17:21:21
+ * @LastEditors: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
+ * @LastEditTime: 2023-05-14 22:29:46
  * @Description: 请填写简介
  */
 #ifndef WBCRYPTO_SM4_BS_H
@@ -17,6 +17,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define WBCRYPTO_SM4_BS_512
 
 void dump_hex(uint8_t * h, int len);
 

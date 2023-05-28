@@ -2,7 +2,7 @@
  * @Author: RyanCLQ
  * @Date: 2023-05-05 15:43:20
  * @LastEditors: RyanCLQ
- * @LastEditTime: 2023-05-16 19:59:33
+ * @LastEditTime: 2023-05-05 16:21:46
  * @Description: 请填写简介
  */
 #pragma once
@@ -23,7 +23,7 @@ class WBSM4SE {
         wbsm4_gen(key_data);
     }
 
-    void block_encrypt(const void *ptext, void *ctext)  {
+    void block_encrypt(const void *ptext, void *ctext, int size)  {
         wbsm4_encrypt((uint8_t*) ptext,(uint8_t*) ctext);
     }
 

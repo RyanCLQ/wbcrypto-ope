@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.9.0)
 
 project(wbcrypto-ope)
 
+
 # global import header file
 set(INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 include_directories(${INCLUDE_DIR})
@@ -34,5 +35,5 @@ install(TARGETS ope ope-static
 ADD_SUBDIRECTORY(test)
 
 
-SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O2 -g  -m64 -mavx2")
+SET(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c99 -O2 -g -m64 -mavx512bw -mavx512f -mavx2")
 

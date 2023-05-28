@@ -16,6 +16,8 @@
 #define GCM_DEFAULT_IV_LEN (12)              /* default iv length in bytes */
 #define GCM_FIELD_CONST (0xe100000000000000) /* the const value in filed */
 
+#define WBCRYPTO_SM4_BS_512
+
 /*
  * basic functions of a block cipher
  */

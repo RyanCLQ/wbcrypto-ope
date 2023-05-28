@@ -1,0 +1,1 @@
+cd build && rm -rf ./* && cmake -DMYSQL8=1 .. && make && sudo make install && cd .. && sudo mysql -u root -p
